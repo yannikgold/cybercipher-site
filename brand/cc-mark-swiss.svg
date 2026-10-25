@@ -1,0 +1,20 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cyber + Cipher">
+  
+  <g fill="#AAB2C0">
+    <circle cx="14" cy="14" r="1.8"></circle>
+    <circle cx="50" cy="14" r="1.8"></circle>
+    <circle cx="14" cy="50" r="1.8"></circle>
+    <circle cx="50" cy="50" r="1.8"></circle>
+  </g>
+  <g stroke="#0C0F15" stroke-width="2.4" stroke-linecap="round">
+    <path d="M32 32 L32 11 M32 32 L32 53 M32 32 L11 32 M32 32 L53 32"></path>
+  </g>
+  <g fill="#0C0F15">
+    <circle cx="32" cy="11" r="3.2"></circle>
+    <circle cx="32" cy="53" r="3.2"></circle>
+    <circle cx="11" cy="32" r="3.2"></circle>
+    <circle cx="53" cy="32" r="3.2"></circle>
+  </g>
+  <circle cx="32" cy="32" r="4.6" fill="#2945E0"></circle>
+  <circle cx="32" cy="32" r="1.7" fill="#FFFFFF"></circle>
+</svg>

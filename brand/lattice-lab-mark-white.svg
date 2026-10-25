@@ -1,0 +1,22 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Lattice Lab">
+  <g stroke="#F4F6FA" stroke-width="1.1" stroke-linecap="round" opacity="0.26">
+    <path d="M31 33 L39 12 M31 33 L55 43 M39 12 L52 19 M52 19 L55 43"></path>
+  </g>
+  <g fill="rgba(255,255,255,0.35)">
+    <circle cx="39" cy="12" r="2.4"></circle>
+    <circle cx="55" cy="43" r="2.4"></circle>
+    <circle cx="52" cy="19" r="2"></circle>
+    <circle cx="57" cy="58" r="1.8"></circle>
+    <circle cx="12" cy="8" r="1.8"></circle>
+  </g>
+  <g stroke="#A581FF" stroke-width="2" stroke-linecap="round">
+    <path d="M31 33 L8 27 M31 33 L22 55 M8 27 L11 47 M11 47 L22 55"></path>
+  </g>
+  <g fill="#A581FF">
+    <circle cx="8" cy="27" r="3"></circle>
+    <circle cx="22" cy="55" r="3"></circle>
+    <circle cx="11" cy="47" r="2.6"></circle>
+  </g>
+  <circle cx="31" cy="33" r="4.4" fill="#8A5CFF"></circle>
+  <circle cx="31" cy="33" r="1.6" fill="#0C0F15"></circle>
+</svg>

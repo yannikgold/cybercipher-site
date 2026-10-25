@@ -1,0 +1,5 @@
+User-Agent: *
+Allow: /
+Disallow: /engagements/
+
+Sitemap: https://cybercipher.cc/sitemap.xml
