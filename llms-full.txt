@@ -1,0 +1,196 @@
+# Cyber + Cipher
+
+> Cyber + Cipher is an independent Swiss studio for security architecture and applied cryptography: confidential computing, post-quantum readiness, verifiable identity, and the protocols underneath.
+
+Cyber + Cipher is based in Zürich, Switzerland. The person responsible is Yannik Goldgräbe (https://github.com/yannikgold). Lattice Lab is the hands-on experimental lab of Cyber + Cipher.
+
+## Topics
+
+- Cryptography & Protocols: Primitives, protocols, and the assumptions underneath. (Applied cryptography & protocol design; Selective disclosure & zero-knowledge; Key management, PKI & certificate automation (ACME))
+- Digital Identity & SSI: Verifiable credentials, wallets, and selective disclosure under EU and Swiss regulation. (EUDI Wallet (EU); e-ID (Switzerland); Credential formats & selective disclosure)
+- Security Architecture & Threat Modelling: Evaluating trust boundaries and challenging you and your team conceptually. (Architecture review; Threat modelling; Regulated & distributed systems)
+- Post-Quantum & Quantum: Security and cryptography for the age of quantum computing. (Post-quantum migration & crypto inventory; Quantum-computing impact & readiness; Hybrid schemes & crypto-agility)
+- Confidential Computing: Data-in-use protection: hardware-bound and virtualisable. (TEE / enclave architecture & attestation; Encryption-in-use; Confidential data pipelines)
+- AI & Security: AI for security and security for AI. (AI for security: detection, analysis, tooling; Security for AI: models, data, prompts, agents; Confidential & verifiable AI)
+- Web3 & Ledgers: Decentralised systems: wallets, consensus protocols, smart contracts. (Blockchain & ledger architecture; Consensus protocols; Cryptocurrency & stablecoins; Wallets, custody, signing & threshold schemes; Protocol & smart-contract security)
+- Hardware Security: Secure elements, hardware-backed keys, and attestation. (JavaCard & secure elements; NFC & contactless; Hardware-backed keys & attestation)
+
+## Lattice Lab projects
+
+- QuantumScan (live): Post-quantum TLS readiness checker: point it at an endpoint and see where its cryptography stands. https://quantumscan.dev
+- Confidential media curator (prototype): Swiss-resident media curation in confidential storage, where data stays in Switzerland and is sent to models only as needed.
+
+## Articles
+
+- [Zero-Knowledge Systems in Practice: Beyond Cryptographic Theory](https://cybercipher.cc/lab/research/zero-knowledge-systems-in-practice): Zero-knowledge proofs are usually framed as a privacy primitive. Their real value shows up one layer higher — in how they let you decouple a system from the data it would otherwise have to hold. (Zero-Knowledge, 2026-05-12)
+- [Confidential Computing as a Shift in the Trust Boundary](https://cybercipher.cc/lab/research/confidential-computing-trust-boundary-shift): Confidential computing does not add a control to cloud security — it changes its founding assumption. Trust moves off the infrastructure and into hardware-enforced execution environments you can attest to. (Confidential Computing, 2026-04-21)
+- [Cryptographic System Design vs Protocol Design: A Missing Layer in Security Architecture](https://cybercipher.cc/lab/research/cryptographic-system-design-vs-protocol-design): Most teams treat cryptography as a protocol-level concern. In practice, the failures cluster one layer up — in how secure protocols are composed into a system. (Security Architecture, 2026-03-18)
+- [Post-Quantum Readiness Is an Architecture Problem, Not a Crypto Upgrade](https://cybercipher.cc/lab/research/post-quantum-readiness-is-an-architecture-problem): Post-quantum cryptography is usually framed as swapping one algorithm for another. The standards are the easy part. The transition is an architectural problem. (Post-Quantum, 2026-02-24)
+- [The Future of Digital Trust Systems: Beyond Identity](https://cybercipher.cc/lab/research/future-of-digital-trust-systems): Digital trust has been built around identity — proving who someone is. The systems now emerging shift the question from who you are to what can be verified. (Trust Systems, 2026-01-29)
+
+## Pages
+
+- [Home](https://cybercipher.cc/)
+- [Topics](https://cybercipher.cc/topics)
+- [Lattice Lab](https://cybercipher.cc/lab)
+- [Contact](https://cybercipher.cc/contact): contact@cybercipher.cc
+- [Full article text](https://cybercipher.cc/llms-full.txt)
+
+---
+
+## Zero-Knowledge Systems in Practice: Beyond Cryptographic Theory
+
+Author: Yannik Goldgräbe · Zero-Knowledge · 2026-05-12 · https://cybercipher.cc/lab/research/zero-knowledge-systems-in-practice
+
+**Abstract.** Zero-knowledge proofs are usually framed as a privacy primitive. Their real value shows up one layer higher — in how they let you decouple a system from the data it would otherwise have to hold.
+
+**Key insight.** Zero-knowledge is not only a privacy tool. It is a way to decouple a system from the data it would otherwise have to trust and hold.
+
+Zero-knowledge proofs are often introduced as a theoretical privacy primitive: a way to prove a statement is true without revealing anything beyond its truth. That description is accurate, and it is also the reason the technology is so frequently misapplied. Treated as a privacy feature to be bolted on, ZK rarely justifies its cost. Treated as an architectural tool, it changes what a system is obligated to know.
+
+This research looks at how zero-knowledge systems behave once they leave the proof-system literature and enter authentication and verification pipelines — where latency budgets, key management, and developer ergonomics decide whether a design survives contact with production.
+
+### ZK is architectural decoupling, not just privacy
+
+The most useful way to think about a zero-knowledge proof is as a contract: a verifier accepts a statement without ingesting the inputs that justify it. The privacy benefit is real, but the architectural benefit is larger. A service that can verify a proof no longer needs to receive, store, or be trusted with the underlying data. The data and the decision are decoupled.
+
+That reframing matters because the most expensive part of most systems is not computation — it is the liability of holding sensitive data and the blast radius that creates. When a verifier can act on a proof instead of a payload, entire categories of storage, access control, and breach exposure simply stop being part of the design.
+
+### Most enterprises misuse trust boundaries rather than eliminate them
+
+In practice, the systems that benefit most from ZK are the ones currently solving a trust problem by moving data across a boundary and then protecting it with policy. A user proves who they are by handing over a document; a partner proves solvency by sharing a ledger; a service proves eligibility by exposing an attribute. Each transfer creates a new place where trust must be administered.
+
+Zero-knowledge lets you collapse those boundaries instead of guarding them. The question shifts from “how do we protect the data we collected to make this decision” to “what is the minimal statement that actually needs to be true.” In most enterprise systems that statement is far smaller than the data currently being moved to establish it.
+
+### Practical ZK is constraint modeling, not cryptographic construction
+
+Teams adopting ZK tend to assume the hard part is the cryptography. Modern proof systems and libraries have largely commoditized the construction. The hard part is modeling the statement: expressing the property you care about as a constraint system that is both sound and small enough to prove efficiently.
+
+A poorly specified circuit can be provably correct and still wrong for the system around it — proving the wrong predicate, leaking through a public input, or making the prover so expensive that the design is abandoned. The engineering discipline is in the modeling: deciding what is public, what is private, what is proven, and what is still assumed.
+
+### Where this shows up
+
+- Selective-disclosure authentication — proving an attribute (age, role, membership) without revealing identity or the credential itself.
+- Identity verification without data exposure — establishing eligibility while the verifying service never receives the underlying personal data.
+- Deliberate trade-offs between proving cost and privacy guarantee — choosing proof systems and parameters against real latency and throughput budgets rather than asymptotic claims.
+
+> **Key insight** ZK is not just privacy — it is architectural decoupling. The value is realized when the system is redesigned around what must be proven, not retrofitted around what is already collected.
+
+## Confidential Computing as a Shift in the Trust Boundary
+
+Author: Yannik Goldgräbe · Confidential Computing · 2026-04-21 · https://cybercipher.cc/lab/research/confidential-computing-trust-boundary-shift
+
+**Abstract.** Confidential computing does not add a control to cloud security — it changes its founding assumption. Trust moves off the infrastructure and into hardware-enforced execution environments you can attest to.
+
+**Key insight.** Confidential computing is not a feature — it is a redesign of where the trust boundary sits.
+
+Cloud security has always rested on a quiet assumption: that the infrastructure — the host, the hypervisor, the operator — must be trusted with your data while it is being processed. Encryption at rest and in transit protect data everywhere except the one place it is most exposed: in use, in memory, in cleartext, on a machine you do not control.
+
+Confidential computing changes that assumption rather than adding to it. Sensitive computation runs inside a hardware-enforced trusted execution environment whose memory is protected from the host, and whose state can be remotely attested before any secret is released to it. The trust boundary stops being the perimeter of the cloud account and becomes the boundary of the enclave.
+
+### How TEEs redefine cloud threat models
+
+The practical consequence is that the cloud provider, the operating system, and the hypervisor can be moved out of the trusted computing base for a given workload. A threat model that previously had to assume a benign operator can instead treat the platform as untrusted and rely on attestation to decide what runs and what it is allowed to see.
+
+This is a genuine shift, not a marketing one. It changes who you must trust, what an attacker who compromises the host actually gains, and where your most sensitive keys and computations can safely live. It also introduces new things that must be verified — the attestation chain, the measured code, and the assumptions of the hardware vendor — which are now load-bearing parts of the system.
+
+### Where it adds value — and where it doesn't
+
+Confidential computing earns its complexity when the operator is part of your threat model: multi-party computation between organizations that do not trust each other, processing of regulated data on infrastructure you do not own, or key operations that must remain opaque to the platform. In those settings, attestation replaces a contractual promise with a verifiable one.
+
+It adds little when the host was never your adversary, or when the data is not sensitive enough to justify the operational weight. TEEs are not a universal hardening step. Side-channel resistance, attestation infrastructure, and a constrained execution model are real costs, and a design that ignores them inherits a false sense of safety. The honest position is that confidential computing narrows the trusted base — it does not eliminate trust.
+
+### Integration patterns for multi-party systems
+
+- Attestation-gated secret release — keys are provisioned to a workload only after its measurement is verified, so compromised or modified code never receives them.
+- Enclave-mediated multi-party computation — mutually distrustful parties contribute inputs to an attested environment that reveals only the agreed result.
+- Confidential key management — signing and key operations run inside the enclave so the platform handles only ciphertext and proofs, never the key.
+
+> **Key insight** Confidential computing is not a feature — it is a redesign of trust boundaries. Its value is decided by your threat model, not by the presence of an enclave.
+
+## Cryptographic System Design vs Protocol Design: A Missing Layer in Security Architecture
+
+Author: Yannik Goldgräbe · Security Architecture · 2026-03-18 · https://cybercipher.cc/lab/research/cryptographic-system-design-vs-protocol-design
+
+**Abstract.** Most teams treat cryptography as a protocol-level concern. In practice, the failures cluster one layer up — in how secure protocols are composed into a system.
+
+**Key insight.** Secure protocols do not guarantee secure systems.
+
+When something goes wrong with cryptography in production, the instinct is to look at the protocol: the cipher suite, the key exchange, the signature scheme. Yet the protocols themselves are rarely where modern failures originate. The primitives are well analyzed and the libraries are mature. Failures cluster in the layer between a correct protocol and a coherent system — a layer that often has no owner.
+
+This research separates three concerns that are routinely collapsed into one, and argues that the middle one is where security architecture actually lives.
+
+### Protocol correctness
+
+Protocol correctness asks whether a primitive or exchange achieves its stated security goal under its stated assumptions. This is the domain of cryptographic analysis and formal proof, and for standardized protocols it is largely a solved, well-trodden problem. Correctness here is necessary. It is also the part teams over-index on, because it is the part with clean answers.
+
+### System-level security composition
+
+Composition is what happens when correct protocols meet each other and the rest of the system. A signature is verified, but nothing binds it to the request it was meant to authorize. Two protocols are each sound, but share a key or a nonce space in a way neither analysis anticipated. An identity is authenticated at the edge and then trusted unconditionally everywhere behind it. None of these is a broken protocol. All of them are broken systems.
+
+This is the missing layer. Security composition is an architectural property: it depends on how trust flows between components, what each one assumes about the others, and whether those assumptions are ever actually checked. It cannot be delegated to a library, because it lives in the spaces between libraries.
+
+### Operational cryptographic risk
+
+The third concern is what happens over time. Keys are rotated, or they are not. Certificates expire on a Friday. A migration leaves two schemes live at once. An algorithm that was sound at design time needs replacing while the system keeps running. Operational risk is where cryptography meets the lifecycle, and it is consistently underestimated because it does not appear in the threat model — it appears in the runbook.
+
+> **Key insight** Secure protocols do not guarantee secure systems. Correctness, composition, and operation are distinct layers — and most real failures live in the composition layer between them.
+
+## Post-Quantum Readiness Is an Architecture Problem, Not a Crypto Upgrade
+
+Author: Yannik Goldgräbe · Post-Quantum · 2026-02-24 · https://cybercipher.cc/lab/research/post-quantum-readiness-is-an-architecture-problem
+
+**Abstract.** Post-quantum cryptography is usually framed as swapping one algorithm for another. The standards are the easy part. The transition is an architectural problem.
+
+**Key insight.** The hardest part of post-quantum adoption is not the algorithms — it is system migration.
+
+Now that post-quantum standards exist, the temptation is to treat the move as a substitution: find the places that use vulnerable public-key cryptography, replace the algorithm, and declare the system quantum-safe. That framing is comforting and wrong. The algorithm is the part that is already solved. The transition is the part that is hard, and it is architectural.
+
+### Why 'replace the algorithm' is the wrong mental model
+
+Public-key cryptography is not isolated in a module you can swap. It is woven through identity, sessions, signing, certificates, hardware tokens, and long-lived data. Post-quantum algorithms also behave differently — larger keys and signatures, different performance characteristics — so they stress protocols, message sizes, and storage assumptions that were tuned for the schemes they replace. A drop-in replacement is rarely actually a drop-in.
+
+There is also a time dimension that pure substitution ignores. Data captured today can be stored and decrypted later once a capable quantum computer exists. For anything with a long confidentiality lifetime, the migration is already urgent — and the systems that hold such data are usually the hardest to change.
+
+### Hybrid cryptography and crypto-agility
+
+The realistic path runs through hybrid schemes — combining a classical and a post-quantum algorithm so a system stays secure if either holds — and through crypto-agility: the architectural ability to change cryptographic primitives without re-engineering the systems that depend on them. Most existing systems are not agile. Algorithm choices are hard-coded, formats assume fixed sizes, and there is no clean seam at which to swap a primitive. Building that seam is the real work.
+
+### Lifecycle management of trust
+
+A migration of this size is not an event; it is a managed period during which multiple schemes coexist. Trust anchors, certificates, and signing keys all have lifecycles that must be carried across the transition without a gap in which something can be forged or downgraded. Managing that overlap — knowing what is signed with what, and when each can be retired — is a governance and architecture problem long before it is a cryptographic one.
+
+### Migrating distributed identities and services
+
+- Inventory of where asymmetric cryptography lives — often far larger and less visible than expected.
+- A seam for crypto-agility so primitives can change without redesigning dependent systems.
+- Hybrid deployment with negotiation and downgrade protection across services that upgrade at different times.
+- Lifecycle planning for trust anchors and long-lived data with extended confidentiality requirements.
+
+> **Key insight** Post-quantum readiness is an architecture problem, not a crypto upgrade. The algorithms are standardized; the migration of distributed identities, trust, and long-lived data is what takes years.
+
+## The Future of Digital Trust Systems: Beyond Identity
+
+Author: Yannik Goldgräbe · Trust Systems · 2026-01-29 · https://cybercipher.cc/lab/research/future-of-digital-trust-systems
+
+**Abstract.** Digital trust has been built around identity — proving who someone is. The systems now emerging shift the question from who you are to what can be verified.
+
+**Key insight.** Future trust systems will not rely on identity alone, but on verifiable state and computation.
+
+For most of the internet's history, digital trust has meant identity. We authenticate a user, establish who they are, and then grant access on the basis of that identity. Identity is necessary, but as a foundation for trust it is increasingly narrow: knowing who performed an action says little about whether the action was correct, whether the data behind it is sound, or whether a computation was carried out faithfully.
+
+The systems now emerging combine several primitives to answer a different question — not who you are, but what can be independently verified about a state or a computation.
+
+### From who you are to what can be verified
+
+Identity answers a question about an actor. Verifiable systems answer a question about a fact: that a balance is sufficient, that a record has not changed, that a model produced its output from the inputs it claims. These are properties of state and computation, not of people, and they can often be checked without knowing — or trusting — who produced them.
+
+### Composable trust: proofs, enclaves, and distributed verification
+
+What makes this shift practical is that the underlying primitives now compose. Zero-knowledge proof systems let a fact be verified without exposing its inputs. Confidential execution environments let a computation run where its integrity can be attested. Distributed verification layers let many parties agree on state without a central authority. Used together, they make trust a property you assemble from verifiable parts rather than a privilege you grant to an identity.
+
+### Verifiable state and computation
+
+The direction of travel is toward systems where the important question is not “who is telling me this” but “can I verify it without trusting the source.” Identity does not disappear — it becomes one input among several, bound to evidence rather than standing in for it. The systems that handle the most sensitive decisions will be the ones that can show their work.
+
+> **Key insight** Future trust systems will not rely on identity alone, but on verifiable state and computation — trust assembled from evidence rather than granted to an actor.

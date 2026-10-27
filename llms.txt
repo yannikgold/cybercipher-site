@@ -1,0 +1,37 @@
+# Cyber + Cipher
+
+> Cyber + Cipher is an independent Swiss studio for security architecture and applied cryptography: confidential computing, post-quantum readiness, verifiable identity, and the protocols underneath.
+
+Cyber + Cipher is based in Zürich, Switzerland. The person responsible is Yannik Goldgräbe (https://github.com/yannikgold). Lattice Lab is the hands-on experimental lab of Cyber + Cipher.
+
+## Topics
+
+- Cryptography & Protocols: Primitives, protocols, and the assumptions underneath. (Applied cryptography & protocol design; Selective disclosure & zero-knowledge; Key management, PKI & certificate automation (ACME))
+- Digital Identity & SSI: Verifiable credentials, wallets, and selective disclosure under EU and Swiss regulation. (EUDI Wallet (EU); e-ID (Switzerland); Credential formats & selective disclosure)
+- Security Architecture & Threat Modelling: Evaluating trust boundaries and challenging you and your team conceptually. (Architecture review; Threat modelling; Regulated & distributed systems)
+- Post-Quantum & Quantum: Security and cryptography for the age of quantum computing. (Post-quantum migration & crypto inventory; Quantum-computing impact & readiness; Hybrid schemes & crypto-agility)
+- Confidential Computing: Data-in-use protection: hardware-bound and virtualisable. (TEE / enclave architecture & attestation; Encryption-in-use; Confidential data pipelines)
+- AI & Security: AI for security and security for AI. (AI for security: detection, analysis, tooling; Security for AI: models, data, prompts, agents; Confidential & verifiable AI)
+- Web3 & Ledgers: Decentralised systems: wallets, consensus protocols, smart contracts. (Blockchain & ledger architecture; Consensus protocols; Cryptocurrency & stablecoins; Wallets, custody, signing & threshold schemes; Protocol & smart-contract security)
+- Hardware Security: Secure elements, hardware-backed keys, and attestation. (JavaCard & secure elements; NFC & contactless; Hardware-backed keys & attestation)
+
+## Lattice Lab projects
+
+- QuantumScan (live): Post-quantum TLS readiness checker: point it at an endpoint and see where its cryptography stands. https://quantumscan.dev
+- Confidential media curator (prototype): Swiss-resident media curation in confidential storage, where data stays in Switzerland and is sent to models only as needed.
+
+## Articles
+
+- [Zero-Knowledge Systems in Practice: Beyond Cryptographic Theory](https://cybercipher.cc/lab/research/zero-knowledge-systems-in-practice): Zero-knowledge proofs are usually framed as a privacy primitive. Their real value shows up one layer higher — in how they let you decouple a system from the data it would otherwise have to hold. (Zero-Knowledge, 2026-05-12)
+- [Confidential Computing as a Shift in the Trust Boundary](https://cybercipher.cc/lab/research/confidential-computing-trust-boundary-shift): Confidential computing does not add a control to cloud security — it changes its founding assumption. Trust moves off the infrastructure and into hardware-enforced execution environments you can attest to. (Confidential Computing, 2026-04-21)
+- [Cryptographic System Design vs Protocol Design: A Missing Layer in Security Architecture](https://cybercipher.cc/lab/research/cryptographic-system-design-vs-protocol-design): Most teams treat cryptography as a protocol-level concern. In practice, the failures cluster one layer up — in how secure protocols are composed into a system. (Security Architecture, 2026-03-18)
+- [Post-Quantum Readiness Is an Architecture Problem, Not a Crypto Upgrade](https://cybercipher.cc/lab/research/post-quantum-readiness-is-an-architecture-problem): Post-quantum cryptography is usually framed as swapping one algorithm for another. The standards are the easy part. The transition is an architectural problem. (Post-Quantum, 2026-02-24)
+- [The Future of Digital Trust Systems: Beyond Identity](https://cybercipher.cc/lab/research/future-of-digital-trust-systems): Digital trust has been built around identity — proving who someone is. The systems now emerging shift the question from who you are to what can be verified. (Trust Systems, 2026-01-29)
+
+## Pages
+
+- [Home](https://cybercipher.cc/)
+- [Topics](https://cybercipher.cc/topics)
+- [Lattice Lab](https://cybercipher.cc/lab)
+- [Contact](https://cybercipher.cc/contact): contact@cybercipher.cc
+- [Full article text](https://cybercipher.cc/llms-full.txt)
