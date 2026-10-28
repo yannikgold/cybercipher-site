@@ -17,8 +17,8 @@ Cyber + Cipher is based in Zürich, Switzerland. The person responsible is Yanni
 
 ## Lattice Lab projects
 
-- QuantumScan (live): Post-quantum TLS readiness checker: point it at an endpoint and see where its cryptography stands. https://quantumscan.dev
-- Confidential media curator (prototype): Swiss-resident media curation in confidential storage, where data stays in Switzerland and is sent to models only as needed.
+- TLS Quantum Scan (live): Post-quantum TLS readiness checker: point it at an endpoint and see where its cryptography stands. https://quantumscan.dev
+- curator (live): AI photo picker for iPhone: sorts the camera roll, picks the shots worth posting, and builds a ready-to-post set. Media is kept in Swiss-resident confidential storage and sent to models only as needed. https://curator.so
 
 ## Articles
 
