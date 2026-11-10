@@ -22,6 +22,8 @@ Cyber + Cipher is based in Zürich, Switzerland. The person responsible is Yanni
 
 ## Articles
 
+- [AI Agents Are a Trust Boundary Problem, Not a Prompt Problem](https://cybercipher.cc/lab/research/ai-agents-are-a-trust-boundary-problem): Prompt injection is usually discussed as a flaw in how models follow instructions. Seen from a security-architecture angle, it is the oldest problem in the field — untrusted input reaching a privileged component — and the defences that work are the same ones that always worked. (AI & Security, 2026-11-10)
+- [Post-Quantum TLS in the Wild: What an Endpoint Scan Can and Cannot Tell You](https://cybercipher.cc/lab/research/post-quantum-tls-what-a-scan-can-tell-you): Hybrid key exchange has quietly become the default in browsers and at large edge networks. A scan of a public endpoint shows one specific thing — whether the handshake still leaks a classically-protected secret — and it is worth being precise about what that does and does not mean. (Post-Quantum, 2026-11-10)
 - [Zero-Knowledge Systems in Practice: Beyond Cryptographic Theory](https://cybercipher.cc/lab/research/zero-knowledge-systems-in-practice): Zero-knowledge proofs are usually framed as a privacy primitive. Their real value shows up one layer higher — in how they let you decouple a system from the data it would otherwise have to hold. (Zero-Knowledge, 2026-05-12)
 - [Confidential Computing as a Shift in the Trust Boundary](https://cybercipher.cc/lab/research/confidential-computing-trust-boundary-shift): Confidential computing does not add a control to cloud security — it changes its founding assumption. Trust moves off the infrastructure and into hardware-enforced execution environments you can attest to. (Confidential Computing, 2026-04-21)
 - [Cryptographic System Design vs Protocol Design: A Missing Layer in Security Architecture](https://cybercipher.cc/lab/research/cryptographic-system-design-vs-protocol-design): Most teams treat cryptography as a protocol-level concern. In practice, the failures cluster one layer up — in how secure protocols are composed into a system. (Security Architecture, 2026-03-18)
@@ -37,6 +39,93 @@ Cyber + Cipher is based in Zürich, Switzerland. The person responsible is Yanni
 - [Full article text](https://cybercipher.cc/llms-full.txt)
 
 ---
+
+## AI Agents Are a Trust Boundary Problem, Not a Prompt Problem
+
+Author: Yannik Goldgräbe · AI & Security · 2026-11-10 · https://cybercipher.cc/lab/research/ai-agents-are-a-trust-boundary-problem
+
+**Abstract.** Prompt injection is usually discussed as a flaw in how models follow instructions. Seen from a security-architecture angle, it is the oldest problem in the field — untrusted input reaching a privileged component — and the defences that work are the same ones that always worked.
+
+**Key insight.** A language model cannot distinguish data from instructions by inspection. Security has to come from where the model sits in the system, not from how it is prompted.
+
+Most discussion of AI security starts from the model: how to make it refuse, how to make it ignore instructions hidden in a web page, how to phrase a system prompt so it holds. That framing treats the model as a component that can be hardened. It cannot — not in the sense security engineering needs. A model that reads text and produces text has no reliable way to tell which parts of its input carry authority. Everything is tokens.
+
+The useful reframing is to stop asking how the model should behave and start asking where it sits. An agent that reads untrusted content and can also call tools is a confused deputy: a privileged component acting on inputs it cannot authenticate. That is a trust boundary problem, and trust boundary problems have well-understood answers.
+
+### Why in-band defences fail
+
+Instruction hierarchies, delimiters, and “ignore anything that looks like an instruction” prompts all operate in-band: they are text, delivered through the same channel as the attack. Each raises the cost for a casual attacker and none establishes a guarantee, because the mechanism that is supposed to enforce the rule is the same mechanism being attacked. This is the SQL-injection lesson again. Escaping strings reduced incidents; parameterised queries ended the class, because they moved the boundary out of the data channel.
+
+For agents there is no exact equivalent of a parameterised query — the model's input genuinely is a mixture of data and intent. But the conclusion carries over: the controls that hold are the ones enforced outside the model, by components that do not read natural language.
+
+### The boundaries that actually exist
+
+An agentic system has at least four distinct trust domains, and most incidents come from collapsing them. There is the principal — the person or service the agent acts for. There is the model, which is best treated as a semi-trusted interpreter. There are the sources — web pages, documents, emails, tool outputs — which are untrusted by default. And there are the effectors: the tools, APIs, and credentials through which the agent changes the world.
+
+Drawing those boundaries explicitly makes the questions concrete. What can the model cause to happen, and with whose credentials? Which effectors are reversible? Which sources were reachable in the same context as which effectors? The answers decide the blast radius of a successful injection far more than the quality of the prompt does.
+
+### Controls that are enforced outside the model
+
+- Least privilege per task. The agent holds a scoped, short-lived credential for the job in front of it, not the principal's standing access. An injected instruction can only reach what the task could reach.
+- Capability separation. Reading untrusted content and performing irreversible actions should not happen in one unbroken context. Where they must, the action goes through a policy layer that does not take natural language as input.
+- Confirmation for side effects. Sending, paying, deleting, publishing, and changing configuration are gated on an out-of-band decision by the principal. The model proposes; a deterministic component disposes.
+- Provenance on inputs. Content is tagged by origin when it enters the context, so policy can reason about “this came from a web page” rather than relying on the model to remember.
+- Egress control. Data leaves the system only to destinations that the principal, not the content, named. This is the control that turns most exfiltration attempts into logged failures.
+- Observability. Every tool call is recorded with its inputs and the context that produced it, so an incident can be reconstructed and the boundary that failed can be identified.
+
+### Security for AI, AI for security
+
+The same structure applies in the other direction. When a model is used to triage alerts, review code, or summarise an incident, it is again a semi-trusted interpreter whose output feeds a decision. The value is real, and so is the failure mode: a convincing summary of the wrong thing. The architectural answer is unchanged — keep the model advisory where consequences are irreversible, and keep the components that enforce policy free of natural-language inputs.
+
+None of this is new security thinking. Confused deputies, least privilege, and separation of data from control are decades old. What is new is a component that is enormously useful precisely because it blurs data and control, deployed at scale and connected to real effectors. The discipline is to enjoy the blur inside the boundary and to refuse it at the edges.
+
+> **Key insight** You cannot prompt your way to a trust boundary. Decide what the model may read, what it may cause, and with whose credentials — and enforce those decisions in components that never see the prompt.
+
+## Post-Quantum TLS in the Wild: What an Endpoint Scan Can and Cannot Tell You
+
+Author: Yannik Goldgräbe · Post-Quantum · 2026-11-10 · https://cybercipher.cc/lab/research/post-quantum-tls-what-a-scan-can-tell-you
+
+**Abstract.** Hybrid key exchange has quietly become the default in browsers and at large edge networks. A scan of a public endpoint shows one specific thing — whether the handshake still leaks a classically-protected secret — and it is worth being precise about what that does and does not mean.
+
+**Key insight.** A TLS scan answers one question: is the session key still derived from a classical secret alone. It says nothing about certificates, data at rest, or the systems behind the endpoint.
+
+Post-quantum migration has a public surface and a private one. The public surface is the TLS handshake: it is what a browser negotiates, what a load balancer terminates, and what anyone on the network path can record today and try to decrypt later. The private surface is everything behind it — certificates, signing keys, stored data, internal protocols. An endpoint scan only sees the first. That makes it useful, and it makes it easy to over-read.
+
+This article sets out what a scan of a public TLS endpoint actually measures, why the key exchange moved first, and where the remaining exposure sits. It is the reasoning behind TLS Quantum Scan, the Lab's readiness checker, and it applies equally to any other tool that reports on the same handshake.
+
+### Why key exchange moved first
+
+The threat that forces action now is not a quantum computer breaking live sessions. It is recording: an adversary captures encrypted traffic today and decrypts it when a cryptographically relevant quantum computer exists. For a classical TLS 1.3 session, the session keys derive from an elliptic-curve Diffie–Hellman exchange. Break that one secret later, and every recorded byte of the session opens. Confidentiality has a retroactive failure mode; authentication does not.
+
+That asymmetry is why the industry prioritised the key exchange. Authentication — the certificate chain and the handshake signature — only has to hold at the moment of the handshake. A forged signature in the future cannot alter a connection that already finished. Certificates can therefore migrate later, and they will, because post-quantum signatures are large and the certificate ecosystem is slow to move.
+
+### What “hybrid” means in the handshake
+
+TLS 1.3 negotiates key exchange through the key_share extension, where client and server agree on a named group. The deployed post-quantum groups are hybrids: a classical exchange and a lattice-based key encapsulation run side by side, and the resulting shared secrets are concatenated before key derivation. The widely deployed combination pairs X25519 with ML-KEM-768, the key encapsulation mechanism standardised by NIST in FIPS 203.
+
+The hybrid is a deliberate hedge. If ML-KEM turns out to have a flaw, the session is still as strong as X25519. If a quantum computer breaks X25519, the session is still as strong as ML-KEM. The cost is a larger ClientHello — the ML-KEM-768 public key alone is about 1.2 kilobytes — which is why some middleboxes and older TLS stacks that assumed a single-packet hello had to be fixed before this could be turned on by default.
+
+### What a scan measures
+
+A scan opens connections to the endpoint and observes the negotiation. The informative results are narrow and concrete: which key-exchange groups the server accepts, which one it chooses when a client offers both hybrid and classical groups, whether it still allows TLS 1.2 (which has no post-quantum key exchange path at all), and which signature algorithms and certificate types appear in the chain.
+
+From that, three honest categories follow. The endpoint negotiates a hybrid group by preference: recorded traffic from modern clients is protected against later decryption. It supports a hybrid group but prefers a classical one: protection depends on what each client offers and the server's selection logic. It offers no post-quantum group at all: every session is recordable and decryptable later, regardless of how modern the client is.
+
+### What a scan cannot see
+
+- Certificates and signatures. Every public endpoint today authenticates with classical signatures. That is expected and is not an immediate risk, but a scan cannot tell you whether the operator has a plan for when it becomes one.
+- The other side of the terminator. A hybrid handshake at the edge says nothing about the TLS between the load balancer and the application, the database connections, the message queues, or the service mesh. Internal traffic is often recorded for longer and migrated last.
+- Data at rest. Backups, archives, and encrypted storage keyed by RSA or ECC envelopes are the longest-lived exposure and are invisible from the network.
+- Non-TLS protocols. SSH, IPsec, VPNs, and proprietary protocols each have their own migration path and their own timeline.
+- Cryptographic inventory. A scan tells you what one endpoint does. Readiness is a property of the whole system, and the system has to be enumerated before it can be migrated.
+
+### Reading the result as an architect
+
+The practical use of a scan is as a sampling instrument. Run it across every externally reachable endpoint, and the distribution tells you how much of your perimeter already benefits from hybrid key exchange for free — usually most of it, if it sits behind a modern CDN or edge — and which endpoints are self-managed and lagging. Those are the ones to fix, and the fix is typically a library or configuration update, not a redesign.
+
+The harder work begins where the scan stops. Certificates will need a path to ML-DSA or to a hybrid signature scheme once the ecosystem settles on one. Long-lived data needs re-keying under post-quantum envelopes. Internal protocols need the same treatment the edge already received. None of that is visible from outside, and all of it is why post-quantum readiness remains an architecture problem rather than a checkbox on a scan report.
+
+> **Key insight** A green scan result means one thing: the session secret is no longer derived from a classical exchange alone. Treat it as the easiest layer, verified — not as the migration, finished.
 
 ## Zero-Knowledge Systems in Practice: Beyond Cryptographic Theory
 
